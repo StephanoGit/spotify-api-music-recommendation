@@ -19,6 +19,15 @@ export default function Profile( {code}) {
     })
     const [playlists, setPlaylists] = useState([])
 
+
+
+    function recommendTracks(playlist_id){
+      axios.post('/test', {
+        'access_token': accessToken,
+        'playlist_id': playlist_id
+      })
+    }
+
     useEffect(() => {
         if (!accessToken) return
         spotifyApi.setAccessToken(accessToken)
@@ -80,11 +89,18 @@ export default function Profile( {code}) {
         <a href={profile.url}>Spotify Profile</a>
         <div className="flex-grow-1 my-2" style={{ overflowY: "auto" }}>
         {playlists.map(playlist => (
-          <div key={playlist.uri}>
-            <img src={playlist.albumUrl} alt={playlist.title} style={{ height: "64px", width: "64px" }} />
-            <div className="ml-3">
-                <div>{playlist.title}</div>
-                <div className="text-muted">{playlist.artist}</div>
+          <div
+            className="d-flex m-2 align-items-center"
+            style={{ cursor: "pointer" }}
+            onClick={() => recommendTracks(playlist.id)}
+            key={playlist.uri}
+          >
+            <div>
+              <img src={playlist.albumUrl} alt={playlist.title} style={{ height: "64px", width: "64px" }} />
+              <div className="ml-3">
+                  <div>{playlist.title}</div>
+                  <div className="text-muted">{playlist.artist}</div>
+              </div>
             </div>
           </div>
         ))}

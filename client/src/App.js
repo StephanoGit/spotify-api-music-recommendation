@@ -16,8 +16,6 @@ function App() {
         fetch('/time')
             .then(res => res.json())
             .then(data => console.log(data))
-
-        axios.post('/test', {'title': 'cool title'})
     }, [])
 
     // return (<div className="App"/>)
