@@ -6,10 +6,13 @@ import PlaylistSearchResult from './PlaylistSearchResult'
 
 const spotifyApi = new SpotifyWebApi({
   clientId: "70416d4acd4f41d187541cd8cbf8f1a5",
+  clientSecret: "994f755689fb49f29b563925aabbbd22"
 })
 
-export default function Profile( {code}) {
-    const accessToken = useAuth(code)
+export default function Profile({accessToken}) {
+    const access_token = accessToken
+    spotifyApi.setAccessToken(access_token)
+
     const [profile, setProfile] = useState({
         name: '',
         email: '',
@@ -19,28 +22,25 @@ export default function Profile( {code}) {
     })
     const [playlists, setPlaylists] = useState([])
 
-
-
     function recommendTracks(playlist_id){
-      axios.post('/test', {
+      axios.post('/recommendations', {
         'access_token': accessToken,
         'playlist_id': playlist_id
       })
     }
 
-    useEffect(() => {
-        if (!accessToken) return
-        spotifyApi.setAccessToken(accessToken)
-      }, [accessToken])
+    // useEffect(() => {
+    //     if (!accessToken) return
+    //     spotifyApi.setAccessToken(accessToken)
+    //   }, [accessToken])
 
 
     useEffect(() => {
         if (!accessToken) return
-        // console.log(spotifyApi.getMe)
 
         let cancel = false
         spotifyApi.getMe().then((res) => {
-            // console.log(res)
+            console.log(res)
             if (cancel) return
             setProfile({
                 name: res.body.display_name,
@@ -61,7 +61,7 @@ export default function Profile( {code}) {
 
         let cancel = false
         spotifyApi.getUserPlaylists().then((res) => {
-            console.log(res)
+            // console.log(res)
             if (cancel) return
             setPlaylists(
                 res.body.items.map(playlist => {
@@ -104,7 +104,7 @@ export default function Profile( {code}) {
             </div>
           </div>
         ))}
-      </div>
+        </div>
 
     </div>
   )

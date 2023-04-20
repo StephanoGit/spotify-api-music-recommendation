@@ -10,8 +10,10 @@ const spotifyApi = new SpotifyWebApi({
   clientId: "70416d4acd4f41d187541cd8cbf8f1a5",
 })
 
-export default function Dashboard({ code }) {
-  const accessToken = useAuth(code)
+export default function Dashboard({accessToken}) {
+  // console.log(code)
+
+  // const accessToken = useAuth(code)
   const [search, setSearch] = useState("")
   const [searchResults, setSearchResults] = useState([])
   const [playingTrack, setPlayingTrack] = useState()
