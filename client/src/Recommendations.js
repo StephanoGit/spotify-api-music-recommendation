@@ -1,14 +1,22 @@
 import React, { useEffect, useState } from "react";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faPlus } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
 
 export default function Recommendations({ spotifyApi }) {
   const [playlists, setPlaylists] = useState([]);
   const [selected, setSelected] = useState(false);
+  const [selectedPlaylist, setSelectedPlaylist] = useState("");
   const [playing, setPlaying] = useState(false);
   const [recommendations, setRecommendations] = useState([]);
-
-
   let audio = new Audio();
+
+  function addToPlaylist(playlist, track) {
+    console.log(playlist, track);
+    spotifyApi.addTracksToPlaylist(playlist, track).then((res) =>{
+      console.log(res);
+    })
+  }
 
   function recommendTracks(playlist_id) {
     console.log(playlist_id);
@@ -22,10 +30,11 @@ export default function Recommendations({ spotifyApi }) {
       .then((res) => {
         setRecommendations(
           res.data.recommendations.map((track) => {
-            // console.log(track);
+            console.log(track);
             return {
               artist: track.artists[0].name,
               id: track.id,
+              uri: track.uri,
               name: track.name,
               preview_url: track.preview_url,
               image: track.album.images[0].url,
@@ -75,7 +84,7 @@ export default function Recommendations({ spotifyApi }) {
           <div
             className="card"
             style={{ cursor: "pointer", width: "300px", marginBottom: "30px" }}
-            onClick={() => recommendTracks(playlist.id)}
+            onClick={() => {recommendTracks(playlist.id); setSelectedPlaylist(playlist.id);}}
             key={playlist.uri}
           >
             <img
@@ -121,6 +130,10 @@ export default function Recommendations({ spotifyApi }) {
               <div className="card-body">
                 <div>{track.name}</div>
                 <div className="text-muted">{track.artist}</div>
+                {track.preview_url == null ? (<div style={{color:"red"}}>No preview available -- Use Search Track</div>) : <div/>}
+                <a className="btn btn-lg rounded-pill" style={{backgroundColor: "#212121", float: "right"}} onClick={() => addToPlaylist(selectedPlaylist, [track.uri])}>
+                  <FontAwesomeIcon icon={faPlus} size="xl" style={{color: "white",}} />
+                </a>
               </div>
             </div>
           ))}
