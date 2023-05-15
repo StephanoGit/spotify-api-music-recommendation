@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+import random
 
 import spotipy
 import spotipy.util as util
@@ -49,12 +50,14 @@ def get_feature_vector(playlist_id, sp):
         else:
             v = format(t[column].mean(), ".3f")
         f_list[column] = v
-    return f_list, final_playlist_df["artist_id"][0]
+    print(len(final_playlist_df), random.randint(0, len(final_playlist_df)-1))
+    return f_list, final_playlist_df["artist_id"][random.randint(0, len(final_playlist_df))]
 
 def generate_recommendation(playlist_id, access_token):
     sp = connect_to_spotify(access_token=access_token)
     playlist_df = playlist_to_df(playlist_id=playlist_id, sp=sp)
     feature_vector, artist = get_feature_vector(playlist_id=playlist_id, sp=sp)
+    print(artist)
 
     track_recomm = sp.recommendations([artist], [], [],
                                   target_danceability=feature_vector["danceability"],
@@ -68,9 +71,10 @@ def generate_recommendation(playlist_id, access_token):
                                   target_tempo=feature_vector["tempo"],
                                   target_key=feature_vector["key"],
                                   target_mode=feature_vector["mode"],
-                                 )['tracks']
+                                  limit = 15)['tracks']
     
-    # print(playlist_df['track'].values)
+    for i, t in enumerate(track_recomm):
+        print(f"{i}. {t['name']} -- {t['artists'][0]['name']}")
     
     # for i, t in enumerate(track_recomm):
     #     if t['name'] not in playlist_df['track'].values:
@@ -78,12 +82,12 @@ def generate_recommendation(playlist_id, access_token):
 
     for i, t in enumerate(track_recomm):
         if t['name'] in playlist_df['track'].values:
-            del t['name']
+            del track_recomm[i]
 
-    # print("\n")
-    # print("\n")
+    print("\n")
+    print("\n")
     
-    # for i, t in enumerate(track_recomm):
-    #     print(f"{i}. {t['name']} -- {t['artists'][0]['name']}")
+    for i, t in enumerate(track_recomm):
+        print(f"{i}. {t['name']} -- {t['artists'][0]['name']}")
 
     return track_recomm

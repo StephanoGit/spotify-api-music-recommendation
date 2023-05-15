@@ -1,111 +1,191 @@
 import React, {useEffect, useState} from 'react'
-import SpotifyWebApi from "spotify-web-api-node"
-import useAuth from "./useAuth"
-import axios from "axios"
-import PlaylistSearchResult from './PlaylistSearchResult'
+import {Link} from "react-router-dom"
 
-const spotifyApi = new SpotifyWebApi({
-  clientId: "70416d4acd4f41d187541cd8cbf8f1a5",
-  clientSecret: "994f755689fb49f29b563925aabbbd22"
-})
-
-export default function Profile({accessToken}) {
-    const access_token = accessToken
-    spotifyApi.setAccessToken(access_token)
-
+export default function Profile({spotifyApi}) {
     const [profile, setProfile] = useState({
         name: '',
         email: '',
         product: '',
         url: '',
         photo: '',
-    })
-    const [playlists, setPlaylists] = useState([])
+    });
+    const [topArtists, setTopArtists] = useState([]);
+    const [topTracks, setTopTracks] = useState([]);
+    const [followedArtists, setFollowedArtists] = useState([]);
+    const [loadedData, setLoadedData] = useState(false);
 
-    function recommendTracks(playlist_id){
-      axios.post('/recommendations', {
-        'access_token': accessToken,
-        'playlist_id': playlist_id
-      })
+    // const [followedUsers, setFollowedUsers] = useState([]);
+    let audio = new Audio();
+    function start(url){
+      audio.src = url
+      audio.play()
     }
-
-    // useEffect(() => {
-    //     if (!accessToken) return
-    //     spotifyApi.setAccessToken(accessToken)
-    //   }, [accessToken])
+  
+    function stop(){
+      audio.pause()
+    }
 
 
     useEffect(() => {
-        if (!accessToken) return
-
-        let cancel = false
         spotifyApi.getMe().then((res) => {
-            console.log(res)
-            if (cancel) return
+          // console.log(res)
             setProfile({
-                name: res.body.display_name,
-                email: res.body.email,
-                product: res.body.product,
-                url: res.body.external_urls.spotify,
-                photo: res.body.images[0].url
+                name: res.display_name,
+                email: res.email,
+                product: res.product,
+                url: res.external_urls.spotify,
+                photo: res.images[0].url
             }
             )
         })
-        return () => (cancel = true)
-    }, [accessToken])
-
-
+    }, [])
 
     useEffect(() => {
-        if (!accessToken) return
+      spotifyApi.getMyTopArtists({ limit: 4 }).then((res) => {
+        // console.log(res)
+        setTopArtists(
+          res.items.map((artist) => {
+            return {
+              name: artist.name,
+              image: artist.images[0].url,
+              genres: artist.genres,
+              url: artist.external_urls.spotify,
+              id: artist.id,
+            };
+          })
+        );
+      });
+  }, []);
 
-        let cancel = false
-        spotifyApi.getUserPlaylists().then((res) => {
-            // console.log(res)
-            if (cancel) return
-            setPlaylists(
-                res.body.items.map(playlist => {
-                  // console.log(playlist)
-                  return {
-                    artist: playlist.owner.display_name,
-                    title: playlist.name,
-                    uri: playlist.uri,
-                    albumUrl: playlist.images[0].url,
-                    id: playlist.id
-                  }
-                })
-              )
+  useEffect(() => {
+    spotifyApi.getMyTopTracks({ limit: 4 }).then((res) => {
+        setTopTracks(
+          res.items.map((track) => {
+            return {
+              artist: track.artists[0].name,
+              id: track.id,
+              uri: track.uri,
+              name: track.name,
+              preview_url: track.preview_url,
+              image: track.album.images[0].url,
+            };
+          })
+        );
+    });
+}, []);
+
+useEffect(() => {
+  spotifyApi.getFollowedArtists({ limit: 10 }).then((res) => {
+    // console.log(res)
+      setFollowedArtists(
+        res.artists.items.map((artist) => {
+          return {
+            name: artist.name,
+            image: artist.images[0].url,
+            genres: artist.genres,
+            url: artist.external_urls.spotify,
+            id: artist.id,
+          };
         })
-        return () => (cancel = true)
-    }, [accessToken])
+      );
+  });
+}, []);
 
+console.log(topTracks);
 
   return (
-    <div>
-        <img src={profile.photo} alt="profile"/>
+  <div className="profile-info" style={{display:"flex", width:"90vw", margin:"auto", marginTop:"50px", gap:"5vw"}}>
+      <div className="profile-details" style={{display:"flex", flexDirection:"column", alignItems:"center",width:"30vw"}}>
+        <img src={profile.photo} alt="profile" style={{width:"200px", height:"200px", objectFit:"cover", borderRadius:"100px"}}/>
         <p>{profile.name}</p>
         <p>{profile.email}</p>
         <p>{profile.product}</p>
         <a href={profile.url}>Spotify Profile</a>
-        <div className="flex-grow-1 my-2" style={{ overflowY: "auto" }}>
-        {playlists.map(playlist => (
-          <div
-            className="d-flex m-2 align-items-center"
-            style={{ cursor: "pointer" }}
-            onClick={() => recommendTracks(playlist.id)}
-            key={playlist.uri}
+      </div>
+      <div className="profile-tops">
+        <h2>Top Tracks</h2>
+          <div style={{display:"flex", flexWrap:"wrap", justifyContent:"space-around"}}>
+          {topTracks.map((track) => (
+            <div
+            className="card"
+            style={{
+              cursor: "pointer",
+              width: "220px",
+              marginBottom: "30px",
+            }}
+            key={track.id}
           >
-            <div>
-              <img src={playlist.albumUrl} alt={playlist.title} style={{ height: "64px", width: "64px" }} />
-              <div className="ml-3">
-                  <div>{playlist.title}</div>
-                  <div className="text-muted">{playlist.artist}</div>
-              </div>
+            <img
+              className="card-img-top"
+              src={track.image}
+              alt={track.name}
+              onMouseOver={() => start(track.preview_url)}
+              onMouseOut={() => stop()}
+            />
+            <div className="card-body">
+              <div>{track.name}</div>
+              <div className="text-muted">{track.artist}</div>
+              {track.preview_url == null ? (<div style={{color:"red"}}>No preview available -- Use Search Track</div>) : <div/>}
             </div>
           </div>
-        ))}
-        </div>
+          ))}
+          </div>
 
+          <h2>Top Artists</h2>
+          <div style={{display:"flex", flexWrap:"wrap", justifyContent:"space-around"}}>
+          {topArtists.map((artist) => (
+            <div
+            className="card"
+            style={{
+              cursor: "pointer",
+              width: "220px",
+              marginBottom: "30px",
+            }}
+            key={artist.id}
+          >
+            <a href={artist.url} target="_blank" rel="noreferrer">
+              <img
+              className="card-img-top"
+              src={artist.image}
+              alt={artist.name}
+              />
+            </a>
+            <div className="card-body">
+              <div>{artist.name}</div>
+              <div className="text-muted">{artist.genres}</div>
+            </div>
+            </div>
+          ))}
+          </div>
+
+          <h2>Followed Artists</h2>
+          <div style={{display:"flex", flexWrap:"wrap", justifyContent:"space-around"}}>
+          {followedArtists.map((artist) => (
+            <div
+            className="card"
+            style={{
+              cursor: "pointer",
+              width: "220px",
+              marginBottom: "30px",
+            }}
+            key={artist.id}
+          >
+            <a href={artist.url} target="_blank" rel="noreferrer">
+              <img
+              className="card-img-top"
+              src={artist.image}
+              alt={artist.name}
+              />
+            </a>
+            <div className="card-body">
+              <div>{artist.name}</div>
+              <div className="text-muted">{artist.genres}</div>
+            </div>
+            </div>
+          ))}
+          </div>
+
+      </div>
     </div>
   )
 }

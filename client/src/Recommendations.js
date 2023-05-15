@@ -2,13 +2,15 @@ import React, { useEffect, useState } from "react";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faPlus } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
+import PuffLoader from "react-spinners/PuffLoader";
 
 export default function Recommendations({ spotifyApi }) {
   const [playlists, setPlaylists] = useState([]);
   const [selected, setSelected] = useState(false);
   const [selectedPlaylist, setSelectedPlaylist] = useState("");
-  const [playing, setPlaying] = useState(false);
   const [recommendations, setRecommendations] = useState([]);
+
+  const [loading, setLoading] = useState(false);
   let audio = new Audio();
 
   function addToPlaylist(playlist, track) {
@@ -42,6 +44,8 @@ export default function Recommendations({ spotifyApi }) {
           })
         );
         setSelected(true);
+        setLoading(false);
+
       });
   }
 
@@ -71,7 +75,13 @@ export default function Recommendations({ spotifyApi }) {
     });
   }, []);
 
-  return !selected ? (
+console.log(playlists);
+
+  return loading ? <div className="loader" 
+    style={{display:"flex" ,justifyContent:"center", alignItems:"center",position:"absolute", width:"100vw", height:"100vh", backgroundColor:"white"}}>
+  <PuffLoader loading={loading} size={400} color="#1ED760"></PuffLoader>
+  </div> :
+  !selected ? (
     <div
       className="d-flex flex-row justify-content-around align-items-center"
       style={{ minWidth: "100vw", marginTop: "50px" }}
@@ -84,13 +94,13 @@ export default function Recommendations({ spotifyApi }) {
           <div
             className="card"
             style={{ cursor: "pointer", width: "300px", marginBottom: "30px" }}
-            onClick={() => {recommendTracks(playlist.id); setSelectedPlaylist(playlist.id);}}
+            onClick={() => {recommendTracks(playlist.id); setSelectedPlaylist(playlist.id); setLoading(!loading);}}
             key={playlist.uri}
           >
             <img
-              className="card-img-top"
-              src={playlist.albumUrl}
-              alt={playlist.title}
+            className="card-img-top"
+            src={playlist.albumUrl}
+            alt={playlist.title}
             />
             <div className="card-body">
               <div>{playlist.title}</div>

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react"
-import useAuth from "./useAuth"
+// import useAuth from "./useAuth"
 // import Player from "./Player"
 import PlaylistSearchResult from "./PlaylistSearchResult"
 import { Container, Form } from "react-bootstrap"
@@ -12,7 +12,7 @@ const spotifyApi = new SpotifyWebApi({
 })
 
 export default function PlaylistDashboard({ code }) {
-  const accessToken = useAuth(code)
+  // const accessToken = useAuth(code)
   const [search, setSearch] = useState("")
   const [searchResults, setSearchResults] = useState([])
   const [playlistTracks, setPlaylistTracks] = useState([])

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react"
-import useAuth from "./useAuth"
+// import useAuth from "./useAuth"
 import Player from "./Player"
 import TrackSearchResult from "./TrackSearchResult"
 import { Container, Form } from "react-bootstrap"
@@ -76,7 +76,7 @@ export default function Dashboard({accessToken}) {
   }, [search, accessToken])
 
   return (
-    <Container className="d-flex flex-column py-2" style={{ height: "100vh" }}>
+    <Container className="d-flex flex-column py-2" style={{ height: "100vh", marginBottom: "90px"}}>
       <Form.Control
         type="search"
         placeholder="Search Songs/Artists"
@@ -97,7 +97,7 @@ export default function Dashboard({accessToken}) {
           </div>
         )}
       </div>
-      <div>
+      <div style={{position: "fixed", width: "90vw", left: "50%", transform: "translate(-50%, 0)"}}>
         <Player accessToken={accessToken} trackUri={playingTrack?.uri} />
       </div>
     </Container>

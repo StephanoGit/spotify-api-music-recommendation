@@ -23,12 +23,11 @@ sp = spotipy.Spotify(auth_manager=auth_manager)
 def get_current_time():
     return {'time': time.time()}
 
-@app.route('/test', methods=['POST'], strict_slashes=False)
+@app.route('/recommendations', methods=['POST', 'GET'], strict_slashes=False)
 def testing():
     playlist_id = request.json['playlist_id']
     access_token = request.json['access_token']
 
     recommendations = generate_recommendation(playlist_id=playlist_id, access_token=access_token)
-    # print(recommendations)
 
-    return {'data': recommendations}
+    return {'recommendations': recommendations}

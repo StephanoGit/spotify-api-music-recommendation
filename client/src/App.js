@@ -3,7 +3,7 @@ import "./component-css/App.css";
 
 import Login from "./Login"
 import Dashboard from "./Dashboard"
-import PlaylistDashboard from "./PlaylistDashboard"
+// import PlaylistDashboard from "./PlaylistDashboard"
 import Profile from "./Profile"
 
 
@@ -11,9 +11,8 @@ import Profile from "./Profile"
 import React, { useEffect, useState } from 'react'
 import { Container } from "react-bootstrap"
 import SpotifyWebApi from "spotify-web-api-js"
-import useAuth from "./useAuth.js"
 
-import { BrowserRouter , Routes, Route } from "react-router-dom"
+// import { BrowserRouter , Routes, Route } from "react-router-dom"
 import Recommendations from "./Recommendations";
 
 
@@ -23,24 +22,6 @@ function App() {
     // const [loggedIn, setLoggedIn] = useState(false)
     const [spotifyToken, setSpotifyToken] = useState(null)
     const [state, setState] = useState('')
-
-    // useEffect(() => {
-    //     // const spotifyToken = window.localStorage.getItem('spotifyToken')
-    //     const hash = window.location.hash
-    //     window.location.hash = ""
-
-    //     if (!spotifyToken && hash){
-    //         const token = hash.split('&')[0].split('=')[1]
-    //         // window.localStorage.setItem('spotifyToken', token)
-    //         setSpotifyToken(token)
-    //         spotifyApi.setAccessToken(token)
-    //     } else {
-    //         setSpotifyToken(spotifyToken)
-    //         spotifyApi.setAccessToken(spotifyToken)
-    //     }
-
-    //     spotifyApi.getMe().then(data => { console.log(data) })
-    // }, [])
 
     useEffect(() => {
         const hash = window.location.hash
@@ -53,24 +34,6 @@ function App() {
         }
         
     }, [])
-
-    // return (
-    //     <div className="app">
-    //         {
-    //             spotifyToken ? (
-    //                 <BrowserRouter>
-    //                     <Routes>
-    //                         <Route path="/dashboard" element={<Dashboard accessToken={spotifyToken} />} />
-    //                         <Route path="/profile" element={<Profile accessToken={spotifyToken} />} />
-    //                     </Routes>
-    //                 </BrowserRouter>
-    //                 // <Profile accessToken={spotifyToken} />
-    //             ) : (
-    //                 <Login />
-    //             )
-    //         }
-    //     </div>
-    // )
 
 
     return spotifyToken ? 
@@ -94,7 +57,7 @@ function App() {
         <div>
             {state ==='recommendation' && <Recommendations spotifyApi={spotifyApi}/>}
             {state ==='tracks' && <Dashboard accessToken={spotifyToken} />}
-            {state ==='profile' && <Profile accessToken={spotifyToken} />}
+            {state ==='profile' && <Profile spotifyApi={spotifyApi} />}
 
         </div>
     </div> : <Login />
