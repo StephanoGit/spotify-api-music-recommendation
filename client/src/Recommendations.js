@@ -45,7 +45,6 @@ export default function Recommendations({ spotifyApi }) {
         );
         setSelected(true);
         setLoading(false);
-
       });
   }
 

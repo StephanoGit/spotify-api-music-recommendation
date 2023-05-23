@@ -1,25 +1,20 @@
 import "bootstrap/dist/css/bootstrap.min.css"
 import "./component-css/App.css";
 
-import Login from "./Login"
-import Dashboard from "./Dashboard"
-// import PlaylistDashboard from "./PlaylistDashboard"
-import Profile from "./Profile"
-
-
-
 import React, { useEffect, useState } from 'react'
 import { Container } from "react-bootstrap"
 import SpotifyWebApi from "spotify-web-api-js"
 
-// import { BrowserRouter , Routes, Route } from "react-router-dom"
+import Login from "./Login"
+import Dashboard from "./Dashboard"
+import Profile from "./Profile"
 import Recommendations from "./Recommendations";
+// import PlaylistDashboard from "./PlaylistDashboard"
 
 
 const spotifyApi = new SpotifyWebApi()
 
 function App() {
-    // const [loggedIn, setLoggedIn] = useState(false)
     const [spotifyToken, setSpotifyToken] = useState(null)
     const [state, setState] = useState('')
 
