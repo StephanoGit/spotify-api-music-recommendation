@@ -1,9 +1,10 @@
 import "bootstrap/dist/css/bootstrap.min.css"
-import "./component-css/App.css";
+import "./style/App.css";
 
 import React, { useEffect, useState } from 'react'
 import { Container } from "react-bootstrap"
 import SpotifyWebApi from "spotify-web-api-js"
+import Marquee from "react-fast-marquee"
 
 import Login from "./Login"
 import Dashboard from "./Dashboard"
@@ -31,9 +32,18 @@ function App() {
     }, [])
 
 
-    return spotifyToken ? 
-    <div className="app">
+    return (
+    <div>
+        <div className="banner" style={{position: "fixed", top: "0"}}>
+            <Marquee>
+                <div className="banner-text text1">	
+                    {[...Array(14)].map((e, i) => (<span key={i}>FIND YOUR FAVOURITE MUSIC</span>))}
+                </div>
+            </Marquee>
+        </div>
 
+    {spotifyToken ? 
+    <div className="app">
         <Container className="d-flex flex-column justify-content-center align-items-center" style={{ minHeight: "90vh" }}>
             <Container className="d-flex flex-row justify-content-center align-items-center" style={{ minHeight: "70vh" }}>
                 <div className="oswald-font" style={{fontSize:"86px"}}>
@@ -55,7 +65,17 @@ function App() {
             {state ==='profile' && <Profile spotifyApi={spotifyApi} />}
 
         </div>
-    </div> : <Login />
+    </div> : <Login />}
+
+        <div className="banner" style={{position: "fixed", bottom: "0"}}>
+            <Marquee>
+                <div className="banner-text text1">	
+                    {[...Array(14)].map((e, i) => (<span key={i}>FIND YOUR FAVOURITE MUSIC</span>))}
+                </div>
+            </Marquee>
+        </div>
+    </div>
+    )
 }
 
 export default App

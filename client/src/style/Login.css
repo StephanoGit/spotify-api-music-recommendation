@@ -1,0 +1,41 @@
+.welcome-div{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin: 0 100px;
+    width: 80vw;
+}
+
+.welcome-text{
+    margin-top: 6rem;
+}
+
+.welcome-separator{
+    width: 80vw;
+    height: 2px;
+    border-radius: 100px;
+    background-color: #3D3D3D;
+
+}
+
+.welcome-text h1{
+    font-size: 6rem;
+    color: white;
+}
+
+.login-div{
+    width: 70vw;
+    display: flex;
+    justify-content: space-between;
+    margin-top: 3rem;
+}
+
+.login-div h1 {
+    padding-top: 2rem;
+    color: white;
+}
+
+.login-div .bttn-txt{
+    margin-bottom: 0;
+    font-size: 2rem;
+}
