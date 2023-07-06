@@ -23,3 +23,31 @@ body{
 .text1 span{
     margin-right: 2rem;
 }
+
+.navbar{
+    display: flex;
+    justify-content: center;
+}
+
+.navbar .d-flex{
+    margin: 2.8rem 2rem 0 2rem;
+}
+
+.navbar .d-flex a{
+    text-decoration: none;
+    padding: 1rem 0;
+    color: white;
+    font-size: 1.2rem;
+    font-weight: 300;
+}
+
+.navbar .d-flex a:hover{
+    color: #B0FF2F;
+}
+
+.navbar .separator{
+    width: 100%;
+    height: 2px;
+    border-radius: 100px;
+    background-color: #3D3D3D;
+}
