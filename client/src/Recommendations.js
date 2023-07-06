@@ -8,6 +8,7 @@ export default function Recommendations({ spotifyApi }) {
   const [playlists, setPlaylists] = useState([]);
   const [selected, setSelected] = useState(false);
   const [selectedPlaylist, setSelectedPlaylist] = useState("");
+  const [selectedPlaylistName, setSelectedPlaylistName] = useState("");
   const [recommendations, setRecommendations] = useState([]);
 
   const [loading, setLoading] = useState(false);
@@ -74,80 +75,65 @@ export default function Recommendations({ spotifyApi }) {
     });
   }, []);
 
-console.log(playlists);
 
-  return loading ? <div className="loader" 
-    style={{display:"flex" ,justifyContent:"center", alignItems:"center",position:"absolute", width:"100vw", height:"100vh", backgroundColor:"white"}}>
-  <PuffLoader loading={loading} size={400} color="#1ED760"></PuffLoader>
+  return (loading ? <div className="loader" 
+    style={{display:"flex" ,justifyContent:"center", alignItems:"center",position:"absolute", width:"100vw", height:"100vh", backgroundColor:"#262626"}}>
+  <PuffLoader loading={loading} size={400} color="#B0FF2F"></PuffLoader>
   </div> :
   !selected ? (
-    <div
-      className="d-flex flex-row justify-content-around align-items-center"
-      style={{ minWidth: "100vw", marginTop: "50px" }}
-    >
+    <div className="flex-column" style={{margin: "1rem auto", width: "95vw"}}>
+      <h1 style={{textTransform: "uppercase", color: "white"}}>//YOUR PLAYLISTS</h1>
       <div
-        className="d-flex justify-content-around flex-wrap"
-        style={{ width: "95vw" }}
+        className="d-flex flex-row justify-content-around align-items-center"
+        style={{ minWidth: "90vw", marginBottom: "2rem"}}
       >
-        {playlists.map((playlist) => (
-          <div
-            className="card"
-            style={{ cursor: "pointer", width: "300px", marginBottom: "30px" }}
-            onClick={() => {recommendTracks(playlist.id); setSelectedPlaylist(playlist.id); setLoading(!loading);}}
-            key={playlist.uri}
-          >
-            <img
-            className="card-img-top"
-            src={playlist.albumUrl}
-            alt={playlist.title}
-            />
-            <div className="card-body">
-              <div>{playlist.title}</div>
-              <div className="text-muted">{playlist.artist}</div>
+          <div style={{display:"flex", flexWrap:"wrap", justifyContent:"space-around"}}>
+            {playlists.map((playlist) => (
+            <div className='track-card' style={{cursor: "pointer", width: "320px", marginBottom: "30px", padding: "1rem 1rem 0.5rem 1rem", backgroundColor: "#262626"}}
+              onClick={() => {recommendTracks(playlist.id); setSelectedPlaylist(playlist.id); setSelectedPlaylistName(playlist.title); setLoading(!loading);}}
+              key={playlist.uri}>
+              <img className='track-card-img' style= {{width: "100%"}} src={playlist.albumUrl} alt={playlist.title}/>
+              <div className='track-card-body'>
+                <div style={{fontSize:"1rem", color: "white", marginTop: ".5rem"}}>{playlist.title}</div>
+                <div className="text-muted">{playlist.artist}</div>
+              </div>
             </div>
+            ))}
           </div>
-        ))}
       </div>
     </div>
   ) : (
-    <div>
+    <div className="flex-column" style={{margin: "1rem auto", width: "95vw"}}>
+      <h1 style={{textTransform: "uppercase", color: "white"}}>//RECOMMENDATIONS FOR "{selectedPlaylistName}"</h1>
       <div
         className="d-flex flex-row justify-content-around align-items-center"
-        style={{ minWidth: "100vw", marginTop: "50px" }}
+        style={{ minWidth: "90vw", marginBottom: "2rem"}}
       >
-        <div
-          className="d-flex justify-content-around flex-wrap"
-          style={{ width: "95vw" }}
-        >
+        <div style={{display:"flex", flexWrap:"wrap", justifyContent:"space-around"}}>
           {recommendations.map((track) => (
-            <div
-              className="card"
-              style={{
-                cursor: "pointer",
-                width: "300px",
-                marginBottom: "30px",
-              }}
-              key={track.id}
-            >
-              <img
-                className="card-img-top"
-                src={track.image}
-                alt={track.name}
-                onMouseOver={() => start(track.preview_url)}
-                onMouseOut={() => stop()}
-              />
-              <div className="card-body">
-                <div>{track.name}</div>
-                <div className="text-muted">{track.artist}</div>
-                {track.preview_url == null ? (<div style={{color:"red"}}>No preview available -- Use Search Track</div>) : <div/>}
-                <a className="btn btn-lg rounded-pill" style={{backgroundColor: "#212121", float: "right"}} onClick={() => addToPlaylist(selectedPlaylist, [track.uri])}>
-                  <FontAwesomeIcon icon={faPlus} size="xl" style={{color: "white",}} />
-                </a>
+          <div className='track-card' style={{cursor: "pointer", width: "320px", marginBottom: "30px", padding: "1rem 1rem 0.5rem 1rem", backgroundColor: "#262626"}}
+            key={track.id}>
+            <img className='track-card-img' style= {{width: "100%"}} src={track.image} alt={track.name} 
+              onMouseOver={() => start(track.preview_url)}
+              onMouseOut={() => stop()}/>
+            <div className='track-card-body' style={{marginTop: ".8rem"}}>
+              <div className="d-flex justify-content-between">
+                <div className="flex-column">
+                  <div style={{fontSize:"1rem", color: "white", marginTop: ".5rem"}}>{track.name}</div>
+                  <div className="text-muted">{track.artist}</div>
+                </div>
+                <div>
+                  <a className="btn btn-lg" style={{backgroundColor: "#B0FF2F"}} onClick={() => addToPlaylist(selectedPlaylist, [track.uri])}>
+                    <FontAwesomeIcon icon={faPlus} size="xl" style={{color: "#262626", margin: "auto"}} />
+                  </a>
+                </div>
               </div>
+              {track.preview_url == null ? (<div style={{color:"red"}}>No preview available</div>) : (<div style={{color:"#262626"}}>Preview available</div>)}
             </div>
+          </div>
           ))}
         </div>
       </div>
-    </div>
+    </div>)
   );
 }

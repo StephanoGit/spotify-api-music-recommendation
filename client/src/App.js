@@ -55,7 +55,6 @@ function App() {
             {state ==='recommendation' && <Recommendations spotifyApi={spotifyApi}/>}
             {state ==='tracks' && <Dashboard accessToken={spotifyToken} />}
             {state ==='profile' && <Profile spotifyApi={spotifyApi} />}
-
         </div>
     </div> : <Login />}
 
