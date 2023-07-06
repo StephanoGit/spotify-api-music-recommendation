@@ -104,15 +104,20 @@ export default function Recommendations({ spotifyApi }) {
     </div>
   ) : (
     <div className="flex-column" style={{margin: "1rem auto", width: "95vw"}}>
-      <h1 style={{textTransform: "uppercase", color: "white"}}>//RECOMMENDATIONS FOR "{selectedPlaylistName}"</h1>
+      <div className="d-flex justify-content-between">
+        <h1 style={{textTransform: "uppercase", color: "white"}}>//RECOMMENDATIONS FOR "{selectedPlaylistName}"</h1>
+        <div>
+          <a className="btn btn-warning btn-lg" onClick={() => {recommendTracks(selectedPlaylist); setLoading(!loading)}}>REFRESH</a>
+        </div>
+      </div>
       <div
         className="d-flex flex-row justify-content-around align-items-center"
         style={{ minWidth: "90vw", marginBottom: "2rem"}}
       >
         <div style={{display:"flex", flexWrap:"wrap", justifyContent:"space-around"}}>
-          {recommendations.map((track) => (
+          {recommendations.map((track, id) => (
           <div className='track-card' style={{cursor: "pointer", width: "320px", marginBottom: "30px", padding: "1rem 1rem 0.5rem 1rem", backgroundColor: "#262626"}}
-            key={track.id}>
+            key={id} id={`id-${id}`}>
             <img className='track-card-img' style= {{width: "100%"}} src={track.image} alt={track.name} 
               onMouseOver={() => start(track.preview_url)}
               onMouseOut={() => stop()}/>
@@ -123,7 +128,7 @@ export default function Recommendations({ spotifyApi }) {
                   <div className="text-muted">{track.artist}</div>
                 </div>
                 <div>
-                  <a className="btn btn-lg" style={{backgroundColor: "#B0FF2F"}} onClick={() => addToPlaylist(selectedPlaylist, [track.uri])}>
+                  <a className="btn btn-lg" style={{backgroundColor: "#B0FF2F"}} onClick={() => {addToPlaylist(selectedPlaylist, [track.uri]); document.getElementById(`id-${id}`).remove()}}>
                     <FontAwesomeIcon icon={faPlus} size="xl" style={{color: "#262626", margin: "auto"}} />
                   </a>
                 </div>
