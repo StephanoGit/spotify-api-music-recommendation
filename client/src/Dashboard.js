@@ -97,7 +97,7 @@ export default function Dashboard({accessToken}) {
           </div>
         )}
       </div>
-      <div style={{position: "fixed", width: "90vw", left: "50%", transform: "translate(-50%, 0)"}}>
+      <div style={{position: "fixed", bottom: "3.2rem", width: "90vw", left: "50%", transform: "translate(-50%, 0)"}}>
         <Player accessToken={accessToken} trackUri={playingTrack?.uri} />
       </div>
     </Container>
