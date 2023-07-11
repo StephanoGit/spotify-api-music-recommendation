@@ -1,5 +1,4 @@
 import React, {useEffect, useState} from 'react'
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import "./style/Profile.css";
 
 export default function Profile({spotifyApi}) {
@@ -15,7 +14,6 @@ export default function Profile({spotifyApi}) {
     const [followedArtists, setFollowedArtists] = useState([]);
     const [loadedData, setLoadedData] = useState(false);
 
-    // const [followedUsers, setFollowedUsers] = useState([]);
     let audio = new Audio();
     function start(url){
       audio.src = url
@@ -29,7 +27,6 @@ export default function Profile({spotifyApi}) {
 
     useEffect(() => {
         spotifyApi.getMe().then((res) => {
-          // console.log(res)
             setProfile({
                 name: res.display_name,
                 email: res.email,
@@ -43,7 +40,6 @@ export default function Profile({spotifyApi}) {
 
     useEffect(() => {
       spotifyApi.getMyTopArtists({ limit: 4 }).then((res) => {
-        // console.log(res)
         setTopArtists(
           res.items.map((artist) => {
             return {
@@ -77,7 +73,6 @@ export default function Profile({spotifyApi}) {
 
 useEffect(() => {
   spotifyApi.getFollowedArtists({ limit: 10 }).then((res) => {
-    // console.log(res)
       setFollowedArtists(
         res.artists.items.map((artist) => {
           return {
@@ -91,8 +86,6 @@ useEffect(() => {
       );
   });
 }, []);
-
-console.log(topTracks);
 
   return (
     <div className='profile' style={{display:"flex", flexDirection:"column", width:"90vw", margin:"auto", marginTop:"50px", gap:"5vw"}}>
@@ -115,7 +108,7 @@ console.log(topTracks);
         <div style={{display:"flex", flexWrap:"wrap", justifyContent:"space-around"}}>
           {topTracks.map((track) => (
           <div className='track-card' style={{cursor: "pointer", width: "260px", marginBottom: "30px", padding: "1rem 1rem 0.5rem 1rem", backgroundColor: "#262626"}} key={track.id}>
-            <img className='track-card-img' style= {{width: "100%"}}src={track.image} alt={track.name} onMouseOver={() => start(track.preview_url)} onMouseOut={() => stop()}/>
+            <img className='track-card-img' style= {{width: "100%"}} src={track.image} alt={track.name} onMouseOver={() => start(track.preview_url)} onMouseOut={() => stop()}/>
             <div className='track-card-body'>
               <div style={{fontSize:"1rem", color: "white", marginTop: ".5rem"}}>{track.name}</div>
               <div className="text-muted">{track.artist}</div>
@@ -132,7 +125,7 @@ console.log(topTracks);
         <div style={{display:"flex", flexWrap:"wrap", justifyContent:"space-around"}}>
           {topArtists.map((artist) => (
           <div className='track-card' style={{cursor: "pointer", width: "260px", marginBottom: "30px", padding: "1rem 1rem 0.5rem 1rem", backgroundColor: "#262626"}} key={artist.id}>
-            <img className='track-card-img' style= {{width: "100%"}}src={artist.image} alt={artist.name}/>
+            <a href={artist.url} target='_blank'><img className='track-card-img' style= {{width: "100%"}}src={artist.image} alt={artist.name}/></a>
             <div className='track-card-body'>
               <div style={{fontSize:"1rem", color: "white", marginTop: ".5rem"}}>{artist.name}</div>
               <div className="text-muted">{artist.genres}</div>
@@ -148,7 +141,7 @@ console.log(topTracks);
         <div style={{display:"flex", flexWrap:"wrap", justifyContent:"space-around"}}>
           {followedArtists.map((artist) => (
           <div className='track-card' style={{cursor: "pointer", width: "260px", marginBottom: "30px", padding: "1rem 1rem 0.5rem 1rem", backgroundColor: "#262626"}} key={artist.id}>
-            <img className='track-card-img' style= {{width: "100%"}}src={artist.image} alt={artist.name}/>
+            <a href={artist.url} target='_blank'><img className='track-card-img' style= {{width: "100%"}}src={artist.image} alt={artist.name}/></a>
             <div className='track-card-body'>
               <div style={{fontSize:"1rem", color: "white", marginTop: ".5rem"}}>{artist.name}</div>
               <div className="text-muted">{artist.genres}</div>

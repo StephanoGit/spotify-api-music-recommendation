@@ -7,7 +7,6 @@ export default function Login() {
 
   useEffect(() => {
     axios.post("/login").then((res) => {
-      console.log(res.data);
       setLoginEndPoint(res.data);
     });
   }, []);
@@ -28,6 +27,7 @@ export default function Login() {
               width={"50%"}
             ></img>
             <h1>//Web API</h1>
+            <h3 style={{color:"#B0FF2F"}}>//MUST HAVE A PREMIUM ACCOUNT</h3>
           </div>
           <div className="d-flex align-items-center">
             <a

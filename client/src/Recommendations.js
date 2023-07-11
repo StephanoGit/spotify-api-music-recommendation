@@ -17,16 +17,11 @@ export default function Recommendations({ spotifyApi }) {
   let audio = new Audio();
 
   function addToPlaylist(playlist, track) {
-    console.log(playlist, track);
     spotifyApi.addTracksToPlaylist(playlist, track).then((res) =>{
-      console.log(res);
     })
   }
 
   function recommendTracks(playlist_id) {
-    console.log(playlist_id);
-    console.log(spotifyApi.getAccessToken());
-
     axios
       .post("/recommendations", {
         access_token: spotifyApi.getAccessToken(),
@@ -35,7 +30,6 @@ export default function Recommendations({ spotifyApi }) {
       .then((res) => {
         setRecommendations(
           res.data.recommendations.map((track) => {
-            console.log(track);
             return {
               artist: track.artists[0].name,
               id: track.id,
@@ -62,7 +56,6 @@ export default function Recommendations({ spotifyApi }) {
 
   useEffect(() => {
     spotifyApi.getUserPlaylists().then((res) => {
-      console.log(res);
       setPlaylists(
         res.items.map((playlist) => {
           return {
