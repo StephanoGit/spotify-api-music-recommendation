@@ -13,11 +13,8 @@ export default function Login() {
   }, []);
 
   return (
-    <div>
+    <div className="login">
       <div className="welcome-div">
-        <div className="banner-text-fake">
-          <h1>FIND YOUR NEW FAVOURITE MUSIC</h1>
-        </div>
         <div className="welcome-text">
           <h1>FIND YOUR NEW</h1>
           <h1>FAVOURITE MUSIC</h1>

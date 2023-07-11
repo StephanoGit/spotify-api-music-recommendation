@@ -4,6 +4,8 @@ import {faPlus } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
 import PuffLoader from "react-spinners/PuffLoader";
 
+import "./style/Recommendations.css";
+
 export default function Recommendations({ spotifyApi }) {
   const [playlists, setPlaylists] = useState([]);
   const [selected, setSelected] = useState(false);
@@ -77,7 +79,7 @@ export default function Recommendations({ spotifyApi }) {
 
 
   return (loading ? <div className="loader" 
-    style={{display:"flex" ,justifyContent:"center", alignItems:"center",position:"absolute", width:"100vw", height:"100vh", backgroundColor:"#262626"}}>
+    style={{display:"flex" ,justifyContent:"center", alignItems:"center",position:"absolute", width:"100vw", height:"100vh", backgroundColor:"#212121"}}>
   <PuffLoader loading={loading} size={400} color="#B0FF2F"></PuffLoader>
   </div> :
   !selected ? (
@@ -104,10 +106,11 @@ export default function Recommendations({ spotifyApi }) {
     </div>
   ) : (
     <div className="flex-column" style={{margin: "1rem auto", width: "95vw"}}>
-      <div className="d-flex justify-content-between">
+      <div className="d-flex justify-content-between" id="bttn-selection">
         <h1 style={{textTransform: "uppercase", color: "white"}}>//RECOMMENDATIONS FOR "{selectedPlaylistName}"</h1>
         <div>
           <a className="btn btn-warning btn-lg" onClick={() => {recommendTracks(selectedPlaylist); setLoading(!loading)}}>REFRESH</a>
+          <a className="btn btn-secondary btn-lg disabled">COSINE SIMILARITY</a>
         </div>
       </div>
       <div

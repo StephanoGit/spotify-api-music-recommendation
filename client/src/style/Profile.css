@@ -25,3 +25,13 @@
     border-radius: 100px;
     background-color: #3D3D3D;
 }
+
+@media only screen and (max-width : 600px){
+    .profile h1 {
+        font-size: 2.5rem;
+    }
+
+    .profile .flex-column p{
+        font-size: 1.4rem;
+    }
+}

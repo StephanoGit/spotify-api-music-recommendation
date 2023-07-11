@@ -33,7 +33,7 @@ function App() {
     <div>
         <div className="banner" style={{position: "fixed", top: "0", zIndex: "999"}}>
             <Marquee>
-                <div className="banner-text text1">	
+                <div className="banner-text text1">
                     {[...Array(14)].map((e, i) => (<span key={i}>FIND YOUR FAVOURITE MUSIC</span>))}
                 </div>
             </Marquee>

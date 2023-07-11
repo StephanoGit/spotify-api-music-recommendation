@@ -104,7 +104,7 @@ console.log(topTracks);
             <p>{profile.name}</p>
             <p>{profile.email}</p>
             <p>{profile.product}</p>
-            <a href={profile.url}>Spotify Profile</a>
+            <a href={profile.url} style={{color: "#B0FF2F"}}>Spotify Profile</a>
           </div>
         </div>
       </div>

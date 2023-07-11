@@ -51,3 +51,20 @@ body{
     border-radius: 100px;
     background-color: #3D3D3D;
 }
+
+@media only screen and (max-width : 500px){
+    .navbar .d-flex{
+        margin-top: 2.8rem;
+        margin-left: auto;
+        margin-right: auto;
+        /* margin: 2.8rem 1rem 0 1rem; */
+    }
+
+    .navbar .d-flex a{
+        text-decoration: none;
+        padding: .5rem 0;
+        color: white;
+        font-size: .8rem;
+        font-weight: 300;
+    }
+}

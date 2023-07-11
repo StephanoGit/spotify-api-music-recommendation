@@ -6,9 +6,14 @@
     width: 80vw;
 }
 
-.welcome-text{
-    margin-top: 6rem;
+.login{
+    margin-top: 8rem;
+    margin-bottom: 8rem;
 }
+
+/* .welcome-text{
+    margin-top: 8rem;
+} */
 
 .welcome-separator{
     width: 80vw;
@@ -38,4 +43,19 @@
 .login-div .bttn-txt{
     margin-bottom: 0;
     font-size: 2rem;
+}
+
+@media only screen and (max-width : 700px){
+    .login-div{
+        flex-wrap: wrap;
+    }
+
+    .welcome-div{
+        margin: auto;
+    }
+
+    .welcome-text h1{
+        font-size: 3rem;
+        color: white;
+    }
 }

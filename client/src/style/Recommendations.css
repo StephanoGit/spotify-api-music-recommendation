@@ -1,0 +1,17 @@
+#bttn-selection a{
+    margin: 0 1rem;
+}
+
+@media only screen and (max-width : 600px){
+    h1 {
+        font-size: 2rem;
+    }
+
+    #bttn-selection{
+        flex-wrap: wrap;
+    }
+
+    #bttn-selection a{
+        margin: 1rem 1rem;
+    }
+}
