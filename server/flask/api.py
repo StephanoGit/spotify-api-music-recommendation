@@ -1,13 +1,8 @@
 from util import generate_recommendation
 
-import time
 from flask import Flask, request
-
-import spotipy
-import spotipy.util as util
-from spotipy.oauth2 import SpotifyOAuth
+import lyricsgenius
 import os
-from dotenv import load_dotenv
 
 app = Flask(__name__)
 
@@ -16,14 +11,24 @@ CLIENT_SECRET = os.getenv('CLIENT_SECRET')
 AUTH_ENDPOINT = os.getenv('AUTH_ENDPOINT')
 REDIRECT_URI = os.getenv('REDIRECT_URI')
 
+ACCESS_TOKEN_GENIUS = os.getenv('ACCESS_TOKEN_GENIUS')
+
+
 scopes_new = ['streaming', 'user-read-email', 'user-read-private', 'user-library-read',
             'user-library-modify', 'user-read-playback-state', 'user-modify-playback-state',
             'playlist-read-private', 'playlist-modify-private', 'playlist-read-collaborative',
             'playlist-modify-public', 'user-top-read', 'user-follow-read'];
 
-scope = 'user-read-playback-state user-modify-playback-state user-library-read'
-auth_manager = spotipy.SpotifyClientCredentials(client_id=CLIENT_ID, client_secret=CLIENT_SECRET)
-sp = spotipy.Spotify(auth_manager=auth_manager)
+
+genius = lyricsgenius.Genius(ACCESS_TOKEN_GENIUS)
+
+@app.route('/lyrics', methods=['POST', 'GET'], strict_slashes=False)
+def getSongLyrics():
+    track = request.json['track']
+    artist = request.json['artist']
+    lyrics = genius.search_song(track, artist).lyrics
+    return {'lyrics': lyrics}
+
 
 @app.route('/login', methods=['POST'], strict_slashes=False)
 def getLoginEndPoint():

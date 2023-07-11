@@ -1,19 +1,11 @@
 import { useState, useEffect } from "react"
-// import useAuth from "./useAuth"
 import Player from "./Player"
 import TrackSearchResult from "./TrackSearchResult"
 import { Container, Form } from "react-bootstrap"
-import SpotifyWebApi from "spotify-web-api-node"
 import axios from "axios"
 
-const spotifyApi = new SpotifyWebApi({
-  clientId: "70416d4acd4f41d187541cd8cbf8f1a5",
-})
+export default function Dashboard({spotifyApi}) {
 
-export default function Dashboard({accessToken}) {
-  // console.log(code)
-
-  // const accessToken = useAuth(code)
   const [search, setSearch] = useState("")
   const [searchResults, setSearchResults] = useState([])
   const [playingTrack, setPlayingTrack] = useState()
@@ -29,31 +21,25 @@ export default function Dashboard({accessToken}) {
     if (!playingTrack) return
 
     axios
-      .get("http://localhost:3001/lyrics", {
-        params: {
+      .post("/lyrics", {
           track: playingTrack.title,
           artist: playingTrack.artist,
-        },
       })
       .then(res => {
         setLyrics(res.data.lyrics)
       })
   }, [playingTrack])
 
-  useEffect(() => {
-    if (!accessToken) return
-    spotifyApi.setAccessToken(accessToken)
-  }, [accessToken])
 
   useEffect(() => {
     if (!search) return setSearchResults([])
-    if (!accessToken) return
+    if (!spotifyApi.getAccessToken()) return
 
     let cancel = false
     spotifyApi.searchTracks(search).then(res => {
       if (cancel) return
       setSearchResults(
-        res.body.tracks.items.map(track => {
+        res.tracks.items.map(track => {
           const smallestAlbumImage = track.album.images.reduce(
             (smallest, image) => {
               if (image.height < smallest.height) return image
@@ -73,7 +59,7 @@ export default function Dashboard({accessToken}) {
     })
 
     return () => (cancel = true)
-  }, [search, accessToken])
+  }, [search])
 
   return (
     <Container className="d-flex flex-column py-2" style={{ height: "100vh", marginBottom: "90px"}}>
@@ -92,13 +78,13 @@ export default function Dashboard({accessToken}) {
           />
         ))}
         {searchResults.length === 0 && (
-          <div className="text-center" style={{ whiteSpace: "pre" }}>
+          <div className="text-center" style={{ whiteSpace: "pre"}}>
             {lyrics}
           </div>
         )}
       </div>
       <div style={{position: "fixed", bottom: "3.2rem", width: "90vw", left: "50%", transform: "translate(-50%, 0)"}}>
-        <Player accessToken={accessToken} trackUri={playingTrack?.uri} />
+        <Player accessToken={spotifyApi.getAccessToken()} trackUri={playingTrack?.uri} />
       </div>
     </Container>
   )
