@@ -38,7 +38,7 @@
       "react-app/jest"
     ]
   },
-  "proxy": "http://127.0.0.1:5000/",
+  "proxy": "https://arcane-stream-35686-3ba02fe740f7.herokuapp.com/",
   "browserslist": {
     "production": [
       ">0.2%",

@@ -27,14 +27,26 @@ export default function Profile({spotifyApi}) {
 
     useEffect(() => {
         spotifyApi.getMe().then((res) => {
+          if (res.images.length < 1) {
             setProfile({
-                name: res.display_name,
-                email: res.email,
-                product: res.product,
-                url: res.external_urls.spotify,
-                photo: res.images[1].url
-            }
-            )
+              name: res.display_name,
+              email: res.email,
+              product: res.product,
+              url: res.external_urls.spotify,
+              photo: 'https://ps.w.org/basic-user-avatars/assets/icon-256x256.png?rev=2560641'
+          }
+          )
+          }
+          else {
+            setProfile({
+              name: res.display_name,
+              email: res.email,
+              product: res.product,
+              url: res.external_urls.spotify,
+              photo: res.images[1].url
+          }
+          )
+          }
         })
     }, [])
 
@@ -106,7 +118,8 @@ useEffect(() => {
       <div className='profile-fav-tracks'>
         <h1>//FAVOURITE TRACKS</h1>
         <div style={{display:"flex", flexWrap:"wrap", justifyContent:"space-around"}}>
-          {topTracks.map((track) => (
+          {topTracks.length === 0 ? <h3>The stats for your favourite tracks has not been yet generated, listen to more tracks...</h3> :
+          topTracks.map((track) => (
           <div className='track-card' style={{cursor: "pointer", width: "260px", marginBottom: "30px", padding: "1rem 1rem 0.5rem 1rem", backgroundColor: "#262626"}} key={track.id}>
             <img className='track-card-img' style= {{width: "100%"}} src={track.image} alt={track.name} onMouseOver={() => start(track.preview_url)} onMouseOut={() => stop()}/>
             <div className='track-card-body'>
@@ -123,7 +136,8 @@ useEffect(() => {
       <div className='profile-top-artists'>
         <h1>//FAVOURITE ARTISTS</h1>
         <div style={{display:"flex", flexWrap:"wrap", justifyContent:"space-around"}}>
-          {topArtists.map((artist) => (
+          {topArtists.length === 0 ? <h3>The stats for your favourite artists has not been yet generated, listen to more artists...</h3> :
+          topArtists.map((artist) => (
           <div className='track-card' style={{cursor: "pointer", width: "260px", marginBottom: "30px", padding: "1rem 1rem 0.5rem 1rem", backgroundColor: "#262626"}} key={artist.id}>
             <a href={artist.url} target='_blank'><img className='track-card-img' style= {{width: "100%"}}src={artist.image} alt={artist.name}/></a>
             <div className='track-card-body'>
@@ -139,7 +153,8 @@ useEffect(() => {
       <div className='profile-followed-artists'>
         <h1>//FOLLOWED ARTISTS</h1>
         <div style={{display:"flex", flexWrap:"wrap", justifyContent:"space-around"}}>
-          {followedArtists.map((artist) => (
+          {followedArtists.length === 0 ? <h3>It seems like you don't follow any artists</h3> :
+          followedArtists.map((artist) => (
           <div className='track-card' style={{cursor: "pointer", width: "260px", marginBottom: "30px", padding: "1rem 1rem 0.5rem 1rem", backgroundColor: "#262626"}} key={artist.id}>
             <a href={artist.url} target='_blank'><img className='track-card-img' style= {{width: "100%"}}src={artist.image} alt={artist.name}/></a>
             <div className='track-card-body'>

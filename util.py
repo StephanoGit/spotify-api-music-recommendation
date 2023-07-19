@@ -30,8 +30,12 @@ def playlist_to_df(playlist_id, sp):
         playlist_df.loc[i, 'duration_ms'] = track["track"]["duration_ms"]
         playlist_df.loc[i, 'added_at'] = track["added_at"]
         
-        
-        feature_df = feature_df.append(sp.audio_features(track["track"]["id"]), ignore_index=True).iloc[: , :-7]
+        current_track_features = sp.audio_features(track["track"]["id"])[0]
+        for key in ['type', 'id', 'uri', 'track_href', 'analysis_url', 'duration_ms', 'time_signature']:
+            del current_track_features[key]
+
+        current_track_features_df = pd.DataFrame.from_dict(current_track_features, orient='index').T
+        feature_df = pd.concat([feature_df, current_track_features_df], ignore_index=True)
     
     playlist_df['added_at'] = pd.to_datetime(playlist_df['added_at'])
     final_playlist_df = pd.concat([playlist_df, feature_df], axis=1)
@@ -50,14 +54,14 @@ def get_feature_vector(playlist_id, sp):
         else:
             v = format(t[column].mean(), ".3f")
         f_list[column] = v
-    print(len(final_playlist_df), random.randint(0, len(final_playlist_df)-1))
-    return f_list, final_playlist_df["artist_id"][random.randint(0, len(final_playlist_df))]
+    # print(len(final_playlist_df), random.randint(0, len(final_playlist_df)-1))
+    return f_list, final_playlist_df["artist_id"][random.randint(0, len(final_playlist_df)-1)]
 
 def generate_recommendation(playlist_id, access_token):
     sp = connect_to_spotify(access_token=access_token)
     playlist_df = playlist_to_df(playlist_id=playlist_id, sp=sp)
     feature_vector, artist = get_feature_vector(playlist_id=playlist_id, sp=sp)
-    print(artist)
+    # print(artist)
 
     track_recomm = sp.recommendations([artist], [], [],
                                   target_danceability=feature_vector["danceability"],
@@ -73,8 +77,8 @@ def generate_recommendation(playlist_id, access_token):
                                   target_mode=feature_vector["mode"],
                                   limit = 15)['tracks']
     
-    for i, t in enumerate(track_recomm):
-        print(f"{i}. {t['name']} -- {t['artists'][0]['name']}")
+    # for i, t in enumerate(track_recomm):
+    #     print(f"{i}. {t['name']} -- {t['artists'][0]['name']}")
     
     # for i, t in enumerate(track_recomm):
     #     if t['name'] not in playlist_df['track'].values:
@@ -84,10 +88,10 @@ def generate_recommendation(playlist_id, access_token):
         if t['name'] in playlist_df['track'].values:
             del track_recomm[i]
 
-    print("\n")
-    print("\n")
+    # print("\n")
+    # print("\n")
     
-    for i, t in enumerate(track_recomm):
-        print(f"{i}. {t['name']} -- {t['artists'][0]['name']}")
+    # for i, t in enumerate(track_recomm):
+    #     print(f"{i}. {t['name']} -- {t['artists'][0]['name']}")
 
     return track_recomm
